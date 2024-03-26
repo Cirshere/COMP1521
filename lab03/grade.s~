@@ -1,0 +1,81 @@
+# read a mark and print the corresponding UNSW grade
+
+main:
+    la $a0, prompt      # printf("Enter a mark: ");
+    li $v0, 4
+    syscall
+
+    li $v0, 5           # scanf("%d", mark);
+    syscall
+    move $t0, $v0       # stores scanf in into t0
+
+    # If mark >= 50, goto 
+    li      $t1, 50
+    bge     $t0, $t1, pass  
+
+    la $a0, fl          # printf("FL\n");
+    li $v0, 4
+    syscall
+
+
+    jr $ra              # return
+
+pass:
+    
+    li $t1, 6
+    bge $t0, $t1, credit
+    
+    li $v0, 4
+    la $a0, ps
+    syscall
+    
+    j end
+    
+credit:
+    
+    li $t1, 75
+    bge $t0, $t1, distinction
+    
+    li $v0, 4
+    la $a0, cr
+    syscall
+    
+    j end
+    
+distinction:
+
+    li $t1, 85
+    bge $t0, $t1, hg_distinction
+    
+    li $v0, 4
+    la $a0, dn
+    syscall
+    
+    j end
+    
+hg_distinction:
+
+    li $v0, 4
+    la $a0, hd
+    syscall
+    
+    j end
+
+end: 
+
+    li $v0, 0
+    jr $ra
+
+    .data
+prompt:
+    .asciiz "Enter a mark: "
+fl:
+    .asciiz "FL\n"
+ps:
+    .asciiz "PS\n"
+cr:
+    .asciiz "CR\n"
+dn:
+    .asciiz "DN\n"
+hd:
+    .asciiz "HD\n"
